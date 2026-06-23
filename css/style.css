@@ -1,0 +1,190 @@
+:root {
+    --bg-gradient: linear-gradient(135deg, #0f172a, #1e293b);
+    --card-bg: #1e293b;
+    --text-primary: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent-blue: #38bdf8;
+    --accent-success: #10b981;
+    --accent-danger: #ef4444;
+    --border: 1px solid #334155;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+    background: var(--bg-gradient);
+    color: var(--text-primary);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.5rem;
+}
+
+.todo-app-container {
+    background-color: var(--card-bg);
+    border: var(--border);
+    width: 100%;
+    max-width: 550px;
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.app-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.app-header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin-bottom: 2rem;
+}
+
+.todo-input-form {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.todo-input-form input {
+    flex: 1;
+    background-color: #0f172a;
+    border: var(--border);
+    padding: 0.8rem 1.2rem;
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.todo-input-form input:focus {
+    border-color: var(--accent-blue);
+}
+
+.add-btn {
+    background-color: var(--accent-blue);
+    color: #0f172a;
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.filter-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #334155;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    color: var(--accent-blue);
+    background-color: #0f172a;
+}
+
+.clear-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+}
+
+.clear-btn:hover {
+    color: var(--accent-danger);
+}
+
+/* Dynamic Todo Items Style */
+.todo-list-wrapper {
+    list-style: none;
+    margin-top: 1rem;
+    max-height: 350px;
+    overflow-y: auto;
+}
+
+.todo-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #0f172a;
+    border: var(--border);
+    border-radius: 8px;
+    margin-bottom: 0.75rem;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.todo-content-box {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+}
+
+.todo-item.completed .todo-text {
+    text-decoration: line-through;
+    color: var(--text-muted);
+}
+
+.todo-text-input {
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1rem;
+    width: 100%;
+    outline: none;
+}
+
+.todo-text-input:focus {
+    border-bottom: 1px solid var(--accent-blue);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.edit-btn, .delete-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+
+.edit-btn { color: var(--accent-blue); }
+.delete-btn { color: var(--accent-danger); }

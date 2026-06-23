@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thiranex Intern Task: Advanced State Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="todo-app-container">
+        <header class="app-header">
+            <h1>Taskmanager Pro</h1>
+            <p>State-Driven JS Architecture</p>
+        </header>
+
+        <!-- Task Input Section (CREATE) -->
+        <form id="todo-form" class="todo-input-form">
+            <input type="text" id="todo-input" placeholder="What needs to be done?" autocomplete="off" required>
+            <button type="submit" class="add-btn">Add Task</button>
+        </form>
+
+        <!-- Advanced Filter Controls (READ / FILTER) -->
+        <div class="filter-controls">
+            <span id="items-count" class="items-left">0 items left</span>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="active">Active</button>
+                <button class="filter-btn" data-filter="completed">Completed</button>
+            </div>
+            <button id="clear-completed" class="clear-btn">Clear Completed</button>
+        </div>
+
+        <!-- Dynamic Container for Tasks -->
+        <ul id="todo-list" class="todo-list-wrapper">
+            <!-- Dynamic elements will inject here via JavaScript -->
+        </ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
