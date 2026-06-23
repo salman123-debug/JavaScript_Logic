@@ -1,4 +1,6 @@
-
+/**
+ * Thiranex Assignment Engine: State-Driven Architecture (With Advanced Edge-Case Handling)
+ */
 
 // 1. GLOBAL STATE DEFINITION
 let todoState = {
@@ -16,16 +18,29 @@ const clearCompletedBtn = document.getElementById('clear-completed');
 
 // 2. STATE MANAGER & PERSISTENCE MECHANISM
 function saveAndRenderState() {
-    // Automatically persist state into window.localStorage
     localStorage.setItem('thiranex_todos', JSON.stringify(todoState.items));
     renderTasks();
 }
 
-// 3. CORE CRUD CAPABILITIES
+// 3. CORE CRUD CAPABILITIES (With Strict Validation & Anti-Duplication)
 function createTodo(text) {
+    const cleanText = text.trim();
+    
+    // Validation 1: Prevent Empty or Whitespace Tasks
+    if (!cleanText) return; 
+
+    // Validation 2: Anti-Duplication Engine (Case-Insensitive Check)
+    const isDuplicate = todoState.items.some(
+        todo => todo.text.toLowerCase() === cleanText.toLowerCase()
+    );
+    if (isDuplicate) {
+        alert("⚠️ This task already exists in your list!");
+        return;
+    }
+
     const newTodo = {
-        id: 'todo_' + Date.now(), // Unique identity strategy
-        text: text.trim(),
+        id: 'todo_' + Date.now(), 
+        text: cleanText,
         completed: false,
         isEditing: false
     };
@@ -34,9 +49,15 @@ function createTodo(text) {
 }
 
 function updateTodoText(id, newText) {
+    const cleanText = newText.trim();
     const item = todoState.items.find(todo => todo.id === id);
-    if (item && newText.trim() !== "") {
-        item.text = newText.trim();
+    
+    if (item) {
+        if (!cleanText) {
+            alert("⚠️ Task content cannot be empty!");
+            return;
+        }
+        item.text = cleanText;
         item.isEditing = false;
     }
     saveAndRenderState();
@@ -51,7 +72,7 @@ function toggleTodoStatus(id) {
 function toggleEditState(id) {
     const item = todoState.items.find(todo => todo.id === id);
     if (item) item.isEditing = !item.isEditing;
-    renderTasks(); // Render localized update
+    renderTasks(); 
 }
 
 function deleteTodo(id) {
@@ -73,15 +94,31 @@ function getFilteredTodos() {
 
 // 5. DYNAMIC DOM RENDERER
 function renderTasks() {
-    todoListContainer.innerHTML = ''; // Memory reset
+    todoListContainer.innerHTML = ''; 
     const visibleTasks = getFilteredTodos();
+
+    // Advanced Addition: Empty State UI Placeholder Handler
+    if (visibleTasks.length === 0) {
+        let dynamicMessage = "🎉 All caught up! No tasks left.";
+        if (todoState.currentFilter === 'active') dynamicMessage = "⚡ No active tasks to complete!";
+        if (todoState.currentFilter === 'completed') dynamicMessage = "🏁 You haven't finished any tasks yet!";
+
+        todoListContainer.innerHTML = `
+            <div style="text-align:center; padding: 2rem; color: var(--text-muted); font-style: italic;">
+                ${dynamicMessage}
+            </div>
+        `;
+        
+        // Counter synchronization for empty state
+        updateActiveCounter();
+        return;
+    }
 
     visibleTasks.forEach(todo => {
         const li = document.createElement('li');
         li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
         li.dataset.id = todo.id;
 
-        // Structural UI setup based on Editing state
         const contentUI = todo.isEditing 
             ? `<input type="text" class="todo-text-input" value="${todo.text}">`
             : `<span class="todo-text">${todo.text}</span>`;
@@ -103,7 +140,11 @@ function renderTasks() {
         todoListContainer.appendChild(li);
     });
 
-    // Track active item matrix values
+    updateActiveCounter();
+}
+
+// Helper function to update counters dynamically
+function updateActiveCounter() {
     const activeCount = todoState.items.filter(todo => !todo.completed).length;
     itemsCountDisplay.textContent = `${activeCount} item${activeCount !== 1 ? 's' : ''} left`;
 }
@@ -117,7 +158,6 @@ todoForm.addEventListener('submit', (e) => {
     }
 });
 
-// Single point event capturing on container (Delegated Architecture)
 todoListContainer.addEventListener('click', (e) => {
     const target = e.target;
     const parentLI = target.closest('.todo-item');
@@ -130,7 +170,6 @@ todoListContainer.addEventListener('click', (e) => {
         deleteTodo(todoId);
     } else if (target.classList.contains('edit-action')) {
         toggleEditState(todoId);
-        // Direct focus on entry context field
         parentLI.querySelector('.todo-text-input').focus();
     } else if (target.classList.contains('save-action')) {
         const inputField = parentLI.querySelector('.todo-text-input');
@@ -138,7 +177,6 @@ todoListContainer.addEventListener('click', (e) => {
     }
 });
 
-// Inline updates capturing inside list
 todoListContainer.addEventListener('keydown', (e) => {
     if (e.key === 'Enter' && e.target.classList.contains('todo-text-input')) {
         const parentLI = e.target.closest('.todo-item');
@@ -146,7 +184,6 @@ todoListContainer.addEventListener('keydown', (e) => {
     }
 });
 
-// Structural view filtering events
 filterButtonsContainer.addEventListener('click', (e) => {
     if (e.target.classList.contains('filter-btn')) {
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
