@@ -1,6 +1,4 @@
-/**
- * Thiranex Assignment Engine: State-Driven Architecture
- */
+
 
 // 1. GLOBAL STATE DEFINITION
 let todoState = {
